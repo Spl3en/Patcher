@@ -24,7 +24,7 @@ patch_new (char *description, MemProc *mp, DWORD addr, unsigned char *code, unsi
 	bb_queue_add(patch_list, p);
 
 	// Init
-	p->activated = FALSE;
+	p->activated = false;
 	p->addr = addr;
 	p->patch = patch;
 	p->mask = mask;

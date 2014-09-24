@@ -16,7 +16,7 @@
 // ---------- Defines -------------
 
 
-// ------ Class declaration -------
+// ------ Struct declaration -------
 typedef
 struct _PatchItem
 {
@@ -54,7 +54,7 @@ BbQueue *
 patch_list_get ();
 
 
-// ----------- Methods ------------
+// ----------- Functions ------------
 
 void
 patch_set_activated (Patch *p, bool activated);
