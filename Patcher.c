@@ -1,4 +1,6 @@
 #include "Patcher.h"
+#define __DEBUG_OBJECT__ "Patcher"
+#include "dbg/dbg.h"
 
 static BbQueue *	patch_item_list_new  (Patch *p);
 static inline void 	patch_item_list_free (BbQueue *pil);
@@ -48,13 +50,13 @@ patch_set_activated (Patch *p, bool activated)
 {
 	if (!p)
 	{
-		warning("Patch is NULL");
+		warn ("Patch is NULL");
 		return;
 	}
 
 	if (!p->addr)
 	{
-		warning("%sPatch \"%s\" is not possible", (activated) ? "" : "Un", p->description);
+		warn ("%sPatch \"%s\" is not possible", (activated) ? "" : "Un", p->description);
 		return;
 	}
 
@@ -62,7 +64,7 @@ patch_set_activated (Patch *p, bool activated)
 	{
 		if (p->activated)
 		{
-			warning("Patch \"%s\" is already activated", p->description);
+			warn ("Patch \"%s\" is already activated", p->description);
 			return;
 		}
 
@@ -76,7 +78,7 @@ patch_set_activated (Patch *p, bool activated)
 			if (!write_to_memory(p->ctxt->proc, str, p->addr + pi->offset, ztring_get_len(pi->z)))
 			{
 				success = 0;
-				warning("Patch \"%s\" : failure (0x%.8x)", p->description, p->addr);
+				warn ("Patch \"%s\" : failure (0x%.8x)", p->description, p->addr);
 				patch_item_debug(pi);
 			}
 
@@ -85,19 +87,19 @@ patch_set_activated (Patch *p, bool activated)
 		}
 
 		if (success)
-			debug("Patch \"%s\" : success (0x%.8x)", p->description, p->addr);
+			dbg ("Patch \"%s\" : success (0x%.8x)", p->description, p->addr);
 	}
 
 	else
 	{
 		if (!p->activated)
-			warning("Patch \"%s\" is already unactivated", p->description);
+			warn("Patch \"%s\" is already unactivated", p->description);
 
 		// Restore the initial bytes
 		if (write_to_memory(p->ctxt->proc, p->signature, p->addr, p->size))
-			debug("UnPatch \"%s\" : success (0x%.8x)", p->description, p->addr);
+			dbg ("UnPatch \"%s\" : success (0x%.8x)", p->description, p->addr);
 		else
-			warning("UnPatch \"%s\" : failure (0x%.8x)", p->description, p->addr);
+			warn("UnPatch \"%s\" : failure (0x%.8x)", p->description, p->addr);
 	}
 
 	p->activated = activated;
@@ -143,7 +145,7 @@ patch_free (Patch *patch)
 void
 patch_debug (Patch *p)
 {
-	debug (
+	dbg (
 		"\n--- Patch Debug : ---\n"
 		" addr  = 0x%.8x\n"
 		" size  = %d\n",
@@ -227,7 +229,7 @@ patch_item_debug (PatchItem *pi)
 		loop++;
 	}
 
-	debug (
+	dbg (
 		"\n--- PatchItem Debug : ---\n"
 		" size = %d bytes\n"
 		" offset = 0x%.8x\n"
